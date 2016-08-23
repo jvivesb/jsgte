@@ -17,10 +17,31 @@
     //     });
     // };
     GTE.STORAGE = window.localStorage;
-    GTE.STORAGE.clear();
+      
+    //////////////////////////////////////////////////////////////////////////
+    // COPIED FROM main.js BY RAHUL TO GET JAUME'S CODE TO WORK CONSISTENTLY
+    // ON ALL BROWSERS AND AFTER RELOADS; FIX PROPERLY LATER
+    //////////////////////////////////////////////////////////////////////////
+    // Initialize settings
+    var setSettingsToDefaults = function() {
+        GTE.STORAGE.settingsBlockSize = GTE.CONSTANTS.BLOCK_SIZE;
+        GTE.STORAGE.settingsCircleSize = GTE.CONSTANTS.CIRCLE_SIZE;
+        GTE.STORAGE.settingsLineThickness = GTE.CONSTANTS.LINE_THICKNESS;
+        GTE.STORAGE.settingsDistLevels = GTE.CONSTANTS.DIST_BETWEEN_LEVELS;
+        var colorNames = Object.keys(GTE.COLOURS);
+        var colours = [];
+        colours.push(GTE.COLOURS[colorNames[0]]);
+        for (var i = 1; i <= GTE.CONSTANTS.MAX_PLAYERS; i++) {
+            colours.push(GTE.COLOURS[colorNames[i]]);
+        }
+        GTE.STORAGE.settingsPlayersColours = JSON.stringify(colours);
+        GTE.STORAGE.settingsOrientation = GTE.CONSTANTS.DEFAULT_ORIENTATION;
+    };
+    setSettingsToDefaults();
+    //////////////////////////////////////////////////////////////////////////
 
     // Always start with root and two children
-    //GTE.tools.newTree();
+    GTE.tools.newTree();
     //GTE.tree.clear();
 
     document.getElementById("button-best-response").addEventListener("click", function () {
