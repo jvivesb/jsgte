@@ -171,24 +171,8 @@ GTE.TREE = (function(parentModule) {
                 GTE.CONSTANTS.MATRIX_Y - 20,
                 // GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_RIGHT,
                 GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_LEFT,
-                this.players[1].name, "player 1")
+                "I", "player 1")
             .colour(this.players[1].colour)
-            .onSave(function () {
-                    // Removes all blankspaces. Substitutes &nbsp; characters
-                    // with spaces and then trims the text so that there are no
-                    // spaces both at the begin and end of the text
-                   // console.log(GTE.tree)
-                    var text = this.getCleanedText();
-                    //console.log(text);
-                    if (text === "") {
-                    window.alert("Player name should not be empty.");
-                    } else {
-                    GTE.tree.matrix.players[1].changeName(text);
-                    }
-                    // Redraw all content editables that represent this Player
-                    // across the tree
-                    GTE.tree.updatePlayerNames(GTE.tree.matrix.players[1]);
-                    });
 
         this.player2 = new GTE.UI.Widgets.ContentEditable(
                 // 6+4 is the magic text offset in the box in
@@ -198,44 +182,20 @@ GTE.TREE = (function(parentModule) {
                 // guiutils/ContentEditable.js
                 GTE.CONSTANTS.MATRIX_Y - 40 - 22,
                 GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_RIGHT,
-                this.players[2].name, "player 2")
+                "II", "player 2")
             .colour(this.players[2].colour)
-            .onSave(function () {
-                    // Removes all blankspaces. Substitutes &nbsp; characters
-                    // with spaces and then trims the text so that there are no
-                    // spaces both at the begin and end of the text
-                    var text = this.getCleanedText();
-                    //console.log(text);
-                    if (text === "") {
-                    window.alert("Player name should not be empty.");
-                    } else {
-                    GTE.tree.matrix.players[2].changeName(text);
-                    }
-                    
-                    //console.log(text);
-                    // Redraw all content editables that represent this Player
-                    // across the tree
-                    GTE.tree.updatePlayerNames(GTE.tree.matrix.players[2]);
-                    });
 
         for(var i=0; i<this.strategies[1].length; i++) {
             var string = "";
             for(var j = 0; j<this.strategies[1][i].moves.length;j++) {
                 string+=this.strategies[1][i].moves[j].name
             }
-            var thisMatrix=this;
             var str = new GTE.UI.Widgets.ContentEditable(
                 GTE.CONSTANTS.MATRIX_X - 14,
                 GTE.CONSTANTS.MATRIX_Y + 36 + i * GTE.CONSTANTS.MATRIX_SIZE,
                 GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_LEFT,
                 string, "player 1")
-            .colour(this.players[1].colour)
-            .index(i)
-            .onSave( function() {
-                    var text = this.getCleanedText();
-                    thisMatrix.strategies[1][this.index].moves[0].name=text;
-                    GTE.diag.redraw();}
-                    );
+            .colour(this.players[1].colour);
         }
 
         for(var i=0; i<this.strategies[2].length; i++) {
@@ -243,20 +203,12 @@ GTE.TREE = (function(parentModule) {
             for(var j = 0; j<this.strategies[2][i].moves.length;j++) {
                 string+=this.strategies[2][i].moves[j].name
             }
-            var thisMatrix=this;
             var str = new GTE.UI.Widgets.ContentEditable(
                 GTE.CONSTANTS.MATRIX_X + 35 + i * GTE.CONSTANTS.MATRIX_SIZE,
                 GTE.CONSTANTS.MATRIX_Y - 40 ,
                 GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_RIGHT,
                 string, "player 2")
-            .colour(this.players[2].colour)
-            .index(i)
-            .onSave( function() {
-                    var text = this.getCleanedText();
-                    thisMatrix.strategies[2][this.index].moves[0].name=text;
-                    GTE.diag.redraw();
-                    }
-                    );
+            .colour(this.players[2].colour);
         }
         while( GTE.canvas.viewbox().width - GTE.CONSTANTS.MATRIX_X < GTE.tree.matrix.strategies[2].length * GTE.CONSTANTS.MATRIX_SIZE
         ||  GTE.canvas.viewbox().height - GTE.CONSTANTS.MATRIX_Y < GTE.tree.matrix.strategies[1].length * GTE.CONSTANTS.MATRIX_SIZE) {

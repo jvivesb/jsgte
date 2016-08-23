@@ -7,13 +7,14 @@ GTE.TREE = (function(parentModule) {
      * @param {Node}   leaf   Leaf where Payoff is attached
      * @param {Player} player Player that gets this payoff
      */
-    function Payoff(leaf, player) {
+    function Payoff(player, leaf) {
         this.value = null;
         this.text = null;
         this.editable = null;
         this.changeText("0");
         this.leaf = leaf;
         this.player = player;
+        this.bestResponseBool = false;
     }
 
     /**
@@ -35,7 +36,8 @@ GTE.TREE = (function(parentModule) {
         this.editable = new GTE.UI.Widgets.ContentEditable(
                 x, y,
                 orientation,
-                this.text, "payoff")
+                this.text, "payoff",
+                this.bestResponseBool)
             .colour(this.player.colour)
             .onSave(
                 function() {

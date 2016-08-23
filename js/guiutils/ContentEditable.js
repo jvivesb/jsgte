@@ -10,7 +10,8 @@ GTE.UI.Widgets = (function (parentModule) {
     * @param {String} text          Widget's text
     * @param {String} cssClass      Widget's cssClass
     */
-    function ContentEditable(x, y, growingOfText, text, cssClass, nb_svg=0) {
+    function ContentEditable(x, y, growingOfText, text, cssClass, bestResponseBool) {
+
         this.x = x;
         this.y = y;
         this.growingOfText = growingOfText;
@@ -19,11 +20,14 @@ GTE.UI.Widgets = (function (parentModule) {
         // a div with the contenteditable attribute on true so that the user can
         // edit the text inside the div as a normal input field.
         this.myforeign = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+        // BvS looking at
+        // https://www.w3.org/TR/SVG/extend.html#ForeignObjectElement
+        // BvS why is 22px a constant in the next line:
         this.myforeign.setAttribute("height", "22px");
         this.myforeign.classList.add("content-editable-foreign"); //to make div fit text
 
         // Create a plain HTML text element with the parameter text
-        this.textnode = document.createTextNode(text);
+        this.textnode = document.createTextNode(text);    
         // Create a div that will contain the text inside it
         this.textdiv = document.createElement("div");
         this.textdiv.style.color = this.colour;
@@ -37,6 +41,7 @@ GTE.UI.Widgets = (function (parentModule) {
         }
         this.textdiv.setAttribute("contenteditable", "true");
         this.textdiv.setAttribute("width", "auto");
+        this.textdiv.setAttribute("fill", "#95B3D7");
         //to make div fit text
         this.textdiv.classList.add("content-editable-inside-foreign");
 
@@ -47,13 +52,13 @@ GTE.UI.Widgets = (function (parentModule) {
             this.x -= GTE.CONSTANTS.CONTENT_EDITABLE_OFFSET_LEFT;
         } else {
             this.x += GTE.CONSTANTS.CONTENT_EDITABLE_OFFSET_RIGHT;
-        }
+        }  
+
         // Translate the foreign and append it to the svg
         this.translate();
-        document.getElementsByTagName('svg')[nb_svg].appendChild(this.myforeign);
+        document.getElementsByTagName('svg')[0].appendChild(this.myforeign);
         this.myforeign.appendChild(this.textdiv);
-
-        // The size of the foreign will be dinamically adjusted depending on the
+        // The size of the foreign will be dynamically adjusted depending on the
         // size of the text. This is the only way to achieve text growing to left.
         // The idea is to adjust the width of the foreign and then translate it
         // to the left the same amount it has grown
@@ -65,6 +70,20 @@ GTE.UI.Widgets = (function (parentModule) {
         this.width = this.textdiv.scrollWidth +
                             GTE.CONSTANTS.CONTENT_EDITABLE_FOREIGN_EXTRA_WIDTH;
         this.previousWidth = GTE.CONSTANTS.CONTENT_EDITABLE_INSIDE_FOREIGN_MIN_WIDTH;
+
+        // Squares around the best responses 
+        if (cssClass === "payoff") {
+
+            if (bestResponseBool === true) {
+                    if (growingOfText === GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_LEFT) {
+                        this.rect = GTE.canvas.rect(17, 16).attr({fill: '#fff', 'fill-opacity': 1, stroke: '#0000FF', 'stroke-width': 1});
+                        this.rect.translate(x -25, y + 2);
+                    } else {
+                        this.rect = GTE.canvas.rect(17, 16).attr({fill: '#fff', 'fill-opacity': 1, stroke: '#FF0000', 'stroke-width': 1});
+                        this.rect.translate(x+6, y + 2); 
+                    }
+            }
+        }
 
         this.myforeign.setAttribute("width", this.width);
         if (growingOfText === GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_LEFT) {
@@ -89,26 +108,31 @@ GTE.UI.Widgets = (function (parentModule) {
             thisContentEditable.width = thisContentEditable.textdiv.scrollWidth +
                             GTE.CONSTANTS.CONTENT_EDITABLE_FOREIGN_EXTRA_WIDTH;
             thisContentEditable.myforeign.setAttribute("width", thisContentEditable.width);
+            //thisContentEditable.myRectangle.setAttribute("width", thisContentEditable.width - 9);
             if (growingOfText === GTE.CONSTANTS.CONTENT_EDITABLE_GROW_TO_LEFT) {
                 // Calculate how much has the foreign grown
                 thisContentEditable.x -=
                     (thisContentEditable.width - thisContentEditable.previousWidth);
                 // Translate the foreign object that amount to the left
-                thisContentEditable.translate();
+                thisContentEditable.translate();   
+                if (thisContentEditable.width < thisContentEditable.previousWidth) {
+                    //this.rect.remove();
+                }
+
             }
             thisContentEditable.previousWidth = thisContentEditable.width;
         });
 
         // blur event is used to detect when the contenteditable loses focus
         this.textdiv.addEventListener('blur', function(e) {
-            if (thisContentEditable.functionOnSave != null){
+            if (thisContentEditable.functionOnSave !== null){
                 // Run functionOnSave
                 thisContentEditable.functionOnSave();
             }
         });
 
         this.textdiv.addEventListener('focus', function(e) {
-            if (thisContentEditable.functionOnSave != null){
+            if (thisContentEditable.functionOnSave !== null){
                 //Select the div completely
                 document.execCommand('selectAll',false,null);
             }
@@ -250,11 +274,6 @@ GTE.UI.Widgets = (function (parentModule) {
         this.textdiv.style.color = colour;
         this.colour = colour;
         return this;
-    };
-                  
-    ContentEditable.prototype.index = function (i) {
-        this.index = i;
-    return this;
     };
 
     if (parentModule === undefined) {

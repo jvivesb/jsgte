@@ -109,6 +109,19 @@ GTE.UI = (function (parentModule) {
     * Function that creates a strategic form independent 
     * of the game tree.
     */
+    Tools.prototype.createStrategicForm = function (x, y) {
+        GTE.tree.clear();
+        GTE.tree.matrix = new GTE.TREE.Bimatrix();
+        GTE.tree.matrix.initialise(x, y);
+        GTE.tree.clear(); // TODO: THIS IS A BIT OF A HACK, WITHOUT IT WE GET OVERLAYED PAYOFFS
+        GTE.tree.matrix.drawMatrix()
+        console.log(GTE.tree.matrix);
+    };
+
+    /**
+    * Function that creates a strategic form independent 
+    * of the game tree.
+    */
     Tools.prototype.createIndependentStrategicForm = function (x, y) {
         GTE.tree.clear();
         this.isetToolsRan = false;
@@ -135,9 +148,14 @@ GTE.UI = (function (parentModule) {
         GTE.tree.draw();
         this.switchMode(GTE.MODES.ADD);
         this.toStrategicForm();
+        this.hidePlayerButtons();
     };
 
-
+    Tools.prototype.hidePlayerButtons = function() {
+        document.getElementById('button-player-0').style.display = 'none'
+        document.getElementById('button-player-1').style.display = 'none'
+        document.getElementById('button-player-2').style.display = 'none'
+    }
     /**
     * Function that selects a player
     * @param {Player} player Player to be set as active

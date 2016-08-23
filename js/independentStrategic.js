@@ -22,8 +22,17 @@
     GTE.tools.newTree();
     GTE.tree.clear();
 
+    document.getElementById("button-best-response").addEventListener("click", function () {
+        GTE.tree.matrix.generateBestResponses();
+        var c = document.getElementById("SvgjsSvg1000");
+        GTE.tree.clear();
+        GTE.tree.matrix.drawMatrix()
+
+    })
+
     document.getElementById("button-new").addEventListener("click", function(){
-        GTE.tools.newTree();
+        GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.GENERAL;
+        GTE.tools.createStrategicForm(2, 2);
         return false;
     });
 
@@ -42,9 +51,13 @@
 
     document.getElementById("button-independent-strategic-general").addEventListener("click", function(){
         var x = prompt("Enter the number of moves for the first player", "2");
-        var y = prompt("Enter the number of moves for the second player", "2");
-        GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.GENERAL;
-        GTE.tools.createIndependentStrategicForm(x, y);
+        if (x) {
+               var y = prompt("Enter the number of moves for the second player", "2");
+               if (y) { 
+                   GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.GENERAL;
+                   GTE.tools.createStrategicForm(x, y);
+                   }
+               }
         return false;
     });
 
@@ -52,14 +65,14 @@
         var x = prompt("Enter the number of moves for the first player", "2");
         var y = prompt("Enter the number of moves for the second player", "2");
         GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.ZEROSUM;
-        GTE.tools.createIndependentStrategicForm(x, y);
+        GTE.tools.createStrategicForm(x, y);
         return false;
     });
 
     document.getElementById("button-independent-strategic-symmetric").addEventListener("click", function(){
         var x = prompt("Enter the number of moves for the game", "2");
         GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.SYMMETRIC;
-        GTE.tools.createIndependentStrategicForm(x, x);
+        GTE.tools.createStrategicForm(x, x);
         return false;
     });
 
@@ -139,7 +152,7 @@
         var dimensions = GTE.tools.parseMatrix(document.getElementById('matrix-player-1').value,document.getElementById('matrix-player-2').value )
         if(dimensions) {
             GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.GENERAL;
-            GTE.tools.createIndependentStrategicForm(dimensions[0], dimensions[1]);
+            GTE.tools.createStrategicForm(dimensions[0], dimensions[1]);
             GTE.tree.clear();
             GTE.tree.matrix.setMatrixFromStringFormat(0, document.getElementById('matrix-player-1').value);
             GTE.tree.matrix.setMatrixFromStringFormat(1, document.getElementById('matrix-player-2').value);
@@ -164,12 +177,12 @@
         document.getElementById('button-merge').style.display = 'none' ;
         document.getElementById('button-dissolve').style.display = 'none' ;
     };
-    hideButtons();
-
     var matrixPopup = document.getElementById("matrixPopup");
     var matrix_bar = document.getElementById("matrix_bar");
     var offset = { x: 0, y: 0 };
     //initialise the matrix
     GTE.STRATEGICFORMMODE = GTE.STRATEGICFORMMODES.GENERAL;
-    GTE.tools.createIndependentStrategicForm(2, 2);
+    //GTE.tools.createIndependentStrategicForm(2, 2);
+    GTE.tools.createStrategicForm(2, 2);
+    hideButtons();
 }());
