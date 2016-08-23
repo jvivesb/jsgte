@@ -17,6 +17,7 @@
     //     });
     // };
     GTE.STORAGE = window.localStorage;
+    GTE.STORAGE.clear();
 
     // Always start with root and two children
     GTE.tools.newTree();
