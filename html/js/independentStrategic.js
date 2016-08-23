@@ -20,8 +20,8 @@
     GTE.STORAGE.clear();
 
     // Always start with root and two children
-    GTE.tools.newTree();
-    GTE.tree.clear();
+    //GTE.tools.newTree();
+    //GTE.tree.clear();
 
     document.getElementById("button-best-response").addEventListener("click", function () {
         GTE.tree.matrix.generateBestResponses();
